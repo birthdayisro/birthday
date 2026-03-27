@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy Birthday, Isro 🚀</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400&family=EB+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+
+<style>
+:root {
+  --deep:    #05010a; /* Darker, richer space background */
+  --void:    #050318;
+  --gold:    #f5d061; /* Updated to match your UI screenshot */
+  --blush:   #ff7096;
+  --violet:  #9b6dff;
+  --text:    #ddd6ff;
+  --mono:    'Share Tech Mono', monospace;
+  --serif:   'EB Garamond', serif;
+  --display: 'Cinzel', serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width:100%; height:100%;
+  background: var(--deep);
+  color: var(--text);
+  font-family: var(--serif);
+  overflow: hidden;
+  cursor: none; /* Hides the default computer cursor */
+}
+
+/* ── CUSTOM IMAGE CURSOR ── */
+#cursor { 
+  position: fixed; 
+  width: 32px; 
+  height: 32px; 
+  background-image: url('cursor.png'); /* The Pink Arrow */
+  background-size: contain; 
+  background-repeat: no-repeat;
+  pointer-events: none; 
+  z-index: 9999; 
+  transform: translate(0, 0); /* Arrow points from top-left */
+  transition: width 0.15s, height 0.15s, background-image 0.15s, transform 0.15s;
+}
+
+/* Switches to the Pig face when hovering over buttons */
+#cursor.hovering {
+  width: 46px; 
+  height: 46px;
+  background-image: url('pig.png'); /* The Pink Pig */
+  transform: translate(-50%, -50%); /* Centers the pig on the mouse */
+}
+
+/* ── SPARKLE DROPS (FAIRY DUST) ── */
+.sparkle {
+  position: fixed;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  box-shadow: 0 0 12px var(--gold);
+  animation: sparkle-fade 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+@keyframes sparkle-fade {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* ── STARFIELD & SCREENS ── */
+#stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 1s ease; }
+.screen.active { opacity:1; pointer-events:all; }
+
+/* ════════════════════════════════
+   SCREEN 1 — LAUNCH (PREMIUM UI)
+════════════════════════════════ */
+#s-launch { background: radial-gradient(ellipse at center, #1a0b2e 0%, var(--deep) 70%); }
+.grid-bg { 
+  position: absolute; inset: 0; 
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); 
+  background-size: 50px 50px; 
+  z-index: -1; 
+  pointer-events: none;
+}
+
+.launch-eyebrow { 
+  display: flex; align-items: center; gap: 20px;
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.6em; 
+  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 20px; 
+}
+.launch-eyebrow::before, .launch-eyebrow::after { 
+  content: ''; width: 40px; height: 1px; background: rgba(255,255,255,0.2); 
+}
+
+.launch-name { 
+  font-family: var(--display); font-size: clamp(5rem, 15vw, 11rem); font-weight: 300; 
+  letter-spacing: 0.15em; color: transparent; 
+  -webkit-text-stroke: 1.5px var(--gold); /* Creates the thin elegant outline */
+  text-transform: uppercase; line-height: 1; text-align: center; 
+  margin-bottom: 20px;
+  animation: slow-glow 4s ease-in-out infinite alternate;
+}
+@keyframes slow-glow { 
+  0% { text-shadow: 0 0 20px rgba(245, 208, 97, 0.1); } 
+  100% { text-shadow: 0 0 50px rgba(245, 208, 97, 0.3); } 
+}
+
+.launch-tagline { 
+  font-family: var(--serif); font-size: clamp(1rem, 2.5vw, 1.3rem); font-style: italic; 
+  font-weight: 300; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; 
+  margin-bottom: 60px; 
+}
+
+.btn-row { display:flex; gap: 24px; align-items:center; }
+
+.btn-launch { 
+  font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.25em; 
+  padding: 18px 48px; background: var(--gold); color: #111; font-weight: bold;
+  border: none; cursor: none; text-transform: uppercase; transition: all 0.3s; 
+  box-shadow: 0 0 20px rgba(245,208,97,0.15);
+}
+.btn-launch:hover { box-shadow: 0 0 40px rgba(245,208,97,0.4); transform: translateY(-2px); }
+
+.btn-deny { 
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; 
+  padding: 17px 36px; background: transparent; color: rgba(255,255,255,0.3); 
+  border: 1px solid rgba(255,255,255,0.1); cursor: none; text-transform: uppercase; 
+  transition: all 0.3s; 
+}
+.btn-deny:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); }
+
+
+/* ── CRY OVERLAY ── */
+#cry-layer { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+#cry-layer.show { opacity:1; pointer-events:all; }
+#cry-layer img { width: clamp(180px,40vw,340px); border-radius: 8px; animation: cry-bob 1s ease-in-out infinite; }
+@keyframes cry-bob { 0%,100%{ transform:translateY(0) rotate(-1deg); } 50%{ transform:translateY(-8px) rotate(1deg); } }
+#cry-layer p { font-family: var(--serif); font-size: clamp(1.2rem,3vw,1.7rem); font-style: italic; color: var(--blush); }
+.btn-okay { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.18em; padding: 13px 32px; background: var(--blush); color: white; border: none; cursor: none; text-transform: uppercase; }
+
+/* ════════════════════════════════
+   SCREEN 1.5 — COUNTDOWN
+════════════════════════════════ */
+#s-countdown { background: radial-gradient(circle at center, rgba(200, 50, 50, 0.1) 0%, transparent 60%); }
+.cd-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.5em; color: var(--blush); text-transform: uppercase; margin-bottom: 10px; animation: pulse 1s infinite; }
+.cd-num { font-family: var(--mono); font-size: clamp(8rem, 25vw, 15rem); font-weight: bold; color: white; text-shadow: 0 0 40px rgba(255, 112, 150, 0.6); line-height: 1; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* ════════════════════════════════
+   SCREEN 3 — JOURNEY (FORWARD MOTION)
+════════════════════════════════ */
+#s-journey { padding: 0; background: transparent; perspective: 800px; overflow: hidden; }
+
+#media-stage {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  z-index: 3; transform-style: preserve-3d;
+}
+
+/* 🔥 EXACT ASPECT RATIO FIX 🔥 */
+.media-item {
+  position: absolute;
+  opacity: 0;
+  will-change: transform, opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-item img, .media-item video {
+  width: auto; 
+  height: auto;
+  max-width: 55vw; 
+  max-height: 60vh;
+  object-fit: contain; 
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(155,109,255,0.3), 0 0 0 2px rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.4);
+}
+
+/* 🚀 SMOOTH PASSING ANIMATIONS (Left and Right ONLY) */
+.anim-pass-left { animation: passLeft linear forwards; }
+.anim-pass-right { animation: passRight linear forwards; }
+
+@keyframes passLeft { 
+  0% { transform: translate3d(-5vw, -10vh, -600px) scale(0.5); opacity: 0; } 
+  20% { opacity: 1; } 
+  80% { opacity: 1; } 
+  100% { transform: translate3d(-35vw, 5vh, 200px) scale(1.2); opacity: 0; } 
+}
+
+@keyframes passRight { 
+  0% { transform: translate3d(5vw, -10vh, -600px) scale(0.5); opacity: 0; } 
+  20% { opacity: 1; } 
+  80% { opacity: 1; } 
+  100% { transform: translate3d(35vw, 5vh, 200px) scale(1.2); opacity: 0; } 
+}
+
+/* 🛸 THE SPACESHIP IMAGE (Moving Forward Smoothly + Interactive) */
+#ship-wrapper {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  transition: transform 0.1s ease-out; 
+}
+#main-ship {
+  height: 220px; 
+  width: auto;
+  filter: drop-shadow(0 20px 25px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(255,160,50,0.6));
+  animation: thrust-float 1.5s ease-in-out infinite;
+  transform-origin: center bottom;
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+
+/* 🔥 WARP TRAIL (Engine Exhaust) 🔥 */
+#warp-trail {
+  position: absolute;
+  top: 85%; /* Behind the bottom part of the ship */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 45px;
+  height: 180px;
+  background: linear-gradient(to bottom, rgba(255,200,80,0.95) 0%, rgba(255,100,50,0.7) 20%, rgba(155,109,255,0.2) 60%, transparent 100%);
+  filter: blur(8px);
+  border-radius: 50% 50% 0 0;
+  animation: trail-flicker 0.1s infinite alternate;
+  z-index: 1; 
+  opacity: 0; /* Hidden by default, only shown in journey */
+  transition: opacity 1s;
+}
+#s-journey.active #warp-trail {
+  opacity: 1;
+}
+
+@keyframes thrust-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-12px) scale(0.98); }
+}
+@keyframes trail-flicker {
+  0% { transform: translateX(-50%) scaleY(1) scaleX(1); opacity: 0.8; }
+  100% { transform: translateX(-50%) scaleY(1.15) scaleX(0.85); opacity: 1; }
+}
+
+/* ── HUD & Controls ── */
+#hud { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 8; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; }
+#hud-status { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.28); text-transform: uppercase; }
+.hud-bar { width: 180px; height: 1px; background: rgba(255,255,255,0.08); }
+.hud-fill { height: 100%; background: linear-gradient(to right, var(--blush), var(--violet), var(--gold)); width: 0%; transition: width 0.6s ease; }
+
+/* GLOBALLY POSITIONED MUSIC PLAYER */
+#player { 
+  position: fixed; bottom: 90px; left: 28px; z-index: 100; 
+  background: rgba(5,2,20,0.75); border: 1px solid rgba(255,255,255,0.07); 
+  border-radius: 6px; padding: 14px 18px; backdrop-filter: blur(16px); 
+  min-width: 200px; max-width: 230px; 
+  opacity: 0; pointer-events: none; transition: opacity 1s; 
+}
+#player.show-ui { opacity: 1; pointer-events: all; }
+
+.player-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; opacity: 0.7; }
+.player-song { font-family: var(--serif); font-size: 0.9rem; font-style: italic; color: rgba(255,255,255,0.75); margin-bottom: 12px; line-height: 1.3; }
+.player-controls { display: flex; align-items: center; gap: 8px; }
+.p-btn { background: none; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 26px; height: 26px; color: rgba(255,255,255,0.7); cursor: none; display: flex; align-items:center; justify-content:center; transition: background 0.3s; }
+.p-bar-wrap { flex:1; height: 2px; background: rgba(255,255,255,0.1); position: relative; }
+.p-bar-fill { height: 100%; background: linear-gradient(to right, var(--blush), var(--gold)); width: 0%; }
+.p-time { font-family: var(--mono); font-size: 0.5rem; color: rgba(255,255,255,0.25); margin-top: 6px; text-align: right; }
+
+#voice-indicator { position: fixed; bottom: 90px; right: 28px; z-index: 100; background: rgba(5,2,20,0.75); border: 1px solid rgba(255,112,150,0.2); border-radius: 40px; padding: 11px 22px; display: flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 0.58rem; color: rgba(255,255,255,0.45); letter-spacing: 0.12em; text-transform: uppercase; backdrop-filter: blur(16px); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+#voice-indicator.show { opacity: 1; border-color: var(--blush); color: var(--blush); box-shadow: 0 0 20px rgba(255,112,150,0.15); pointer-events: all;}
+.vwave { display: flex; gap: 2px; align-items: center; height: 14px; }
+.vwave span { display: block; width: 2px; background: var(--blush); border-radius: 2px; animation: vbar 0.6s ease-in-out infinite; }
+.vwave span:nth-child(1){ height:5px;  animation-delay:0s; }
+.vwave span:nth-child(2){ height:10px; animation-delay:0.1s; }
+.vwave span:nth-child(3){ height:7px;  animation-delay:0.2s; }
+.vwave span:nth-child(4){ height:12px; animation-delay:0.3s; }
+.vwave span:nth-child(5){ height:5px;  animation-delay:0.15s; }
+@keyframes vbar { 0%,100%{ transform:scaleY(0.4); opacity:0.5; } 50%{ transform:scaleY(1); opacity:1; } }
+
+/* ════════════════════════════════
+   SCREEN 4 & 5 (Arrival & Letter)
+════════════════════════════════ */
+#s-planet { background: radial-gradient(ellipse at 50% 80%, #0f0326 0%, var(--deep) 65%); gap: 0; }
+.arrival-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.4em; color: rgba(255,255,255,0.2); text-transform: uppercase; margin-bottom: 36px; }
+#planet { position: relative; width: clamp(160px, 32vw, 300px); height: clamp(160px, 32vw, 300px); border-radius: 50%; background: radial-gradient(circle at 32% 30%, rgba(220,180,255,0.15) 0%, transparent 45%), radial-gradient(circle at 38% 38%, #c580ff 0%, #7020cc 35%, #2a0050 65%, #0a0015 100%); box-shadow: 0 0 0 1px rgba(180,120,255,0.15), 0 0 60px rgba(140,60,220,0.35); animation: planet-glow 8s infinite; margin-bottom: 40px; cursor: none; }
+@keyframes planet-glow { 0%,100%{ box-shadow: 0 0 40px rgba(140,60,220,0.3); } 50%{ box-shadow: 0 0 70px rgba(160,80,255,0.45); } }
+.arrival-msg { font-family: var(--display); font-size: clamp(0.8rem, 2vw, 1rem); color: rgba(210,190,255,0.6); margin-bottom: 32px; text-align: center; }
+.btn-open { font-family: var(--mono); padding: 14px 44px; background: transparent; border: 1px solid rgba(180,120,255,0.35); color: rgba(200,170,255,0.8); cursor: none; text-transform: uppercase; transition: background 0.3s; }
+.btn-open:hover { background: rgba(180,120,255,0.1); }
+
+#s-letter { background: radial-gradient(ellipse at 50% 0%, #100325 0%, var(--deep) 75%); overflow-y: auto; padding: 0 24px; display:block; }
+#letter-inner { max-width: 620px; margin: 0 auto; padding: 72px 0 100px; display:flex; flex-direction:column; align-items:center; }
+.letter-eyebrow { font-family: var(--display); font-size: 0.72rem; letter-spacing: 0.42em; color: var(--gold); opacity: 0.5; margin-bottom: 52px; }
+.letter-text { font-family: var(--serif); font-size: clamp(1.1rem, 2.5vw, 1.38rem); line-height: 2.15; color: rgba(235,228,255,0.87); white-space: pre-wrap; font-style: italic; width:100%; }
+.l-line { display: block; opacity: 0; transform: translateY(14px); transition: opacity 0.7s, transform 0.7s; }
+.l-line.on { opacity: 1; transform: translateY(0); }
+.letter-sign { margin-top: 60px; font-family: var(--display); color: var(--blush); opacity: 0; transition: opacity 0.8s; }
+.letter-sign.on { opacity:1; }
+</style>
+</head>
+<body>
+
+<!-- UPDATED IMAGE CURSOR -->
+<div id="cursor"></div>
+
+<canvas id="stars"></canvas>
+
+<!-- PLAYER & VOICE UI (Global overlay so they persist) -->
+<div id="player">
+  <div class="player-label">Now Playing</div>
+  <div class="player-song">Don't Even Text — Tsumyoki Gini</div>
+  <div class="player-controls">
+    <button class="p-btn" id="play-btn" onclick="togglePlay()">▶</button>
+    <div class="p-bar-wrap" id="p-bar-wrap"><div class="p-bar-fill" id="p-bar"></div></div>
+  </div>
+  <div class="p-time" id="p-time">0:00 / 0:00</div>
+</div>
+
+<div id="voice-indicator">
+  <span class="vicon">🔊</span><span>Incoming Transmission...</span>
+  <div class="vwave"><span></span><span></span><span></span><span></span><span></span></div>
+</div>
+
+<!-- AUDIO TAGS -->
+<audio id="countdown-audio" src="countdown.mp3"></audio>
+<audio id="song" src="Don''t even text.mp3"></audio>
+<video id="voice-vid" src="voice_message.mp4" style="display:none" playsinline></video>
+
+<div id="s-launch" class="screen active">
+  <div class="grid-bg"></div>
+  <div class="launch-eyebrow">Mission // Birthday</div>
+  <div class="launch-name" data-name="Isro">Isro</div>
+  <div class="launch-tagline">a little something, just for you</div>
+  <div class="btn-row">
+    <button class="btn-launch" onclick="startCountdown()">🚀 Ready to Take Off</button>
+    <button class="btn-deny" onclick="showCry()">Not Yet</button>
+  </div>
+</div>
+
+<div id="cry-layer">
+  <img src="cry.gif" alt="please say yes"/>
+  <p>you really said no…? 💔💔🥀🥀</p>
+  <button class="btn-okay" onclick="hideCry()">Just fucking say yes isro</button>
+</div>
+
+<!-- NEW COUNTDOWN SCREEN -->
+<div id="s-countdown" class="screen">
+  <div class="cd-label">T - MINUS</div>
+  <div class="cd-num" id="cd-num">10</div>
+</div>
+
+<div id="s-journey" class="screen">
+  <div id="ship-wrapper">
+    <img id="main-ship" src="spaceship.png" alt="Spaceship">
+    <!-- NEW WARP TRAIL -->
+    <div id="warp-trail"></div>
+  </div>
+  <div id="media-stage"></div>
+  <div id="hud">
+    <div id="hud-status">Departing Earth...</div>
+    <div class="hud-bar"><div class="hud-fill" id="hud-fill"></div></div>
+  </div>
+</div>
+
+<div id="s-planet" class="screen">
+  <div class="arrival-label">Destination Reached</div>
+  <div id="planet"></div>
+  <div class="arrival-msg">Something is waiting for you, Isro...</div>
+  <button class="btn-open" onclick="openLetter()">Open the Letter 💌</button>
+</div>
+
+<div id="s-letter" class="screen">
+  <div id="letter-inner">
+    <div class="letter-eyebrow">A letter, just for you</div>
+    <div class="letter-text" id="letter-text"></div>
+    <div class="letter-sign" id="letter-sign"></div>
+  </div>
+</div>
+
+<script>
+/* ── NEW CUSTOM IMAGE CURSOR & PIG HOVER LOGIC ── */
+const cur = document.getElementById('cursor');
+let mx = window.innerWidth/2, my = window.innerHeight/2; 
+let shipTargetX = 0, shipTargetRot = 0, shipCurrX = 0, shipCurrRot = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  
+  // Arrow sticks exactly to the mouse instantly
+  cur.style.left = mx + 'px'; 
+  cur.style.top = my + 'px';
+  
+  // Calculate interactive ship tilt based on mouse position
+  let normX = (mx / window.innerWidth) * 2 - 1; // -1 (left) to 1 (right)
+  shipTargetX = normX * 80; 
+  shipTargetRot = normX * 15; 
+});
+
+// Add the pig hover effect to ALL buttons!
+document.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('mouseenter', () => cur.classList.add('hovering'));
+  btn.addEventListener('mouseleave', () => cur.classList.remove('hovering'));
+});
+
+/* ── MAGIC SPARKLE DROPS (ON CLICK) ── */
+document.addEventListener('click', (e) => {
+  for(let i=0; i<10; i++) {
+    let sp = document.createElement('div');
+    sp.className = 'sparkle';
+    sp.style.left = e.clientX + 'px';
+    sp.style.top = e.clientY + 'px';
+    sp.style.background = Math.random() > 0.5 ? 'var(--gold)' : 'var(--blush)';
+    
+    // Scatter physics
+    let angle = Math.random() * Math.PI * 2;
+    let dist = Math.random() * 40 + 20; 
+    sp.style.setProperty('--tx', Math.cos(angle)*dist + 'px');
+    sp.style.setProperty('--ty', (Math.sin(angle)*dist + 20) + 'px'); // +20 adds a subtle gravity drop
+    
+    document.body.appendChild(sp);
+    setTimeout(() => sp.remove(), 800); // Remove after animation
+  }
+});
+
+
+// Animate just the ship smoothly
+const shipWrapper = document.getElementById('ship-wrapper');
+function animLoop(){
+  if(shipWrapper && document.getElementById('s-journey').classList.contains('active')) {
+    shipCurrX += (shipTargetX - shipCurrX) * 0.05;
+    shipCurrRot += (shipTargetRot - shipCurrRot) * 0.05;
+    shipWrapper.style.transform = `translateX(calc(-50% + ${shipCurrX}px)) rotate(${shipCurrRot}deg)`;
+  }
+  requestAnimationFrame(animLoop);
+} 
+animLoop();
+
+
+/* ── MOVING STARFIELD & RANDOM SHOOTING STARS ── */
+let starSpeed = 0.2; // Slow idle initially
+let starStretch = 1; // No stretch initially
+
+(()=>{
+  const c=document.getElementById('stars'), ctx=c.getContext('2d');
+  let s=[];
+  let shootingStars = []; // Array to hold the shooting stars
+  
+  function r(){
+    c.width=innerWidth; c.height=innerHeight;
+    s=Array.from({length:180},()=>({
+      x:Math.random()*c.width, y:Math.random()*c.height,
+      r:Math.random()*1.5, a:Math.random()
+    }));
+  }
+  addEventListener('resize',r); r();
+  
+  function d(){
+    ctx.clearRect(0,0,c.width,c.height);
+    
+    // Regular Stars
+    s.forEach(i=>{
+      i.y += (i.r * starSpeed);
+      if(i.y > c.height) { i.y = 0; i.x = Math.random()*c.width; }
+      
+      ctx.beginPath();
+      if(starStretch > 1) {
+        ctx.moveTo(i.x, i.y);
+        ctx.lineTo(i.x, i.y + (i.r * starStretch * 3));
+        ctx.strokeStyle=`rgba(255,255,255,${i.a})`;
+        ctx.lineWidth = i.r;
+        ctx.stroke();
+      } else {
+        ctx.arc(i.x, i.y, i.r, 0, 6.28);
+        ctx.fillStyle=`rgba(255,255,255,${i.a})`;
+        ctx.fill();
+      }
+    });
+
+    // Shooting Stars Logic (Only happens if we aren't warping too fast)
+    if (starStretch <= 2 && Math.random() < 0.015) { // 1.5% chance per frame
+      shootingStars.push({
+        x: Math.random() * c.width,
+        y: -50,
+        len: Math.random() * 80 + 40,
+        speed: Math.random() * 15 + 15,
+        opacity: 1,
+        angleX: (Math.random() - 0.5) * 0.8 // Random slight diagonal
+      });
+    }
+
+    // Draw Shooting Stars
+    for (let j = shootingStars.length - 1; j >= 0; j--) {
+      let ss = shootingStars[j];
+      ss.x += ss.speed * ss.angleX;
+      ss.y += ss.speed;
+      ss.opacity -= 0.008; // Fade out slowly
+      
+      ctx.beginPath();
+      ctx.moveTo(ss.x, ss.y);
+      ctx.lineTo(ss.x - (ss.speed * ss.angleX * 4), ss.y - ss.len);
+      let grad = ctx.createLinearGradient(ss.x, ss.y, ss.x - (ss.speed * ss.angleX * 4), ss.y - ss.len);
+      grad.addColorStop(0, `rgba(255,255,255,${ss.opacity})`);
+      grad.addColorStop(1, `rgba(255,255,255,0)`);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = Math.random() > 0.5 ? 2 : 1.5;
+      ctx.stroke();
+
+      // Remove when off screen or faded
+      if (ss.opacity <= 0 || ss.y > c.height + 100) shootingStars.splice(j, 1);
+    }
+
+    requestAnimationFrame(d);
+  }
+  requestAnimationFrame(d);
+})();
+
+/* Screens */
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function showCry(){ document.getElementById('cry-layer').classList.add('show'); }
+function hideCry(){ document.getElementById('cry-layer').classList.remove('show'); }
+
+/* Audio API for Echo Effect */
+let audioCtx, voiceSource;
+function initWebAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContext();
+    const voiceVid = document.getElementById('voice-vid');
+    
+    voiceSource = audioCtx.createMediaElementSource(voiceVid);
+    const delayNode = audioCtx.createDelay();
+    delayNode.delayTime.value = 0.35;
+    const feedbackGain = audioCtx.createGain();
+    feedbackGain.gain.value = 0.4;
+    const masterGain = audioCtx.createGain();
+    masterGain.gain.value = 1.2;
+    
+    voiceSource.connect(delayNode);
+    delayNode.connect(feedbackGain);
+    feedbackGain.connect(delayNode); 
+    voiceSource.connect(masterGain); 
+    delayNode.connect(masterGain);   
+    masterGain.connect(audioCtx.destination);
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+/* ── COUNTDOWN SEQUENCE ── */
+function startCountdown() {
+  initWebAudio(); 
+  
+  // Play countdown audio
+  const cdAudio = document.getElementById('countdown-audio');
+  cdAudio.volume = 0.8;
+  cdAudio.play().catch(e => console.log("Audio block", e));
+
+  showScreen('s-countdown');
+  let count = 10;
+  const countEl = document.getElementById('cd-num');
+  
+  starSpeed = 0.8;
+
+  const timer = setInterval(() => {
+    count--;
+    if (count > 0) {
+      countEl.textContent = count;
+      if (count <= 3) {
+         starSpeed += 3;
+         starStretch += 2;
+      }
+    } else {
+      clearInterval(timer);
+      countEl.textContent = "LIFTOFF!";
+      
+      starSpeed = 25; 
+      starStretch = 15;
+      
+      setTimeout(() => {
+         starSpeed = 4;
+         starStretch = 1;
+         beginJourney();
+      }, 1500); 
+    }
+  }, 1000);
+}
+
+/* ════════════════════════════════════
+   SEQUENCE LOGIC (All Pics & Videos)
+════════════════════════════════════ */
+const SEQUENCE = [
+  { type:'single', src:'first hello.png' },
+  { type:'single', src:'pic2.png' },
+  { type:'single', src:'pic3.png' },
+  { type:'video',  src:'fitcheck1.mp4' }, 
+  { type:'single', src:'pic4.png' },
+  { type:'single', src:'pic5.png' },
+  { type:'single', src:'pic6.png' },
+  { type:'single', src:'pic7.png' },
+  { type:'single', src:'pic8.png' },
+  { type:'single', src:'pic9.png' },
+  { type:'video',  src:'fitcheck2.mp4' },
+  { type:'single', src:'pic10.png' },
+  { type:'single', src:'pic11.png' },
+  { type:'single', src:'pic12.png' },
+  { type:'single', src:'pic13.png' },
+  { type:'single', src:'pic14.webp' },
+  { type:'single', src:'pic15.png' },
+  { type:'single', src:'pic16.png' },
+  { type:'single', src:'pic17.png' },
+  { type:'single', src:'pic18.jpg' },
+  { type:'single', src:'pic19.jpg' },
+  { type:'single', src:'pic20.jpeg' },
+  { type:'single', src:'pic21.png' },
+  { type:'single', src:'pic22.png' }
+];
+
+const eligibleVoiceIndexes = SEQUENCE.map((item, index) => item.type === 'single' && index > 2 ? index : -1).filter(i => i !== -1);
+const randomVoiceIndex = eligibleVoiceIndexes[Math.floor(Math.random() * eligibleVoiceIndexes.length)] || 6;
+SEQUENCE[randomVoiceIndex].triggerVoice = true;
+
+const DIRS = ['left', 'right'];
+const HUD_MSGS = ['Departing Earth...', 'Passing Memories', 'Cruising through the Void...', 'Destination in sight 💜'];
+let currentIdx = 0;
+const ITEM_DURATION = 4500; 
+
+function beginJourney(){
+  showScreen('s-journey');
+  document.getElementById('player').classList.add('show-ui');
+  playSong();
+  
+  document.getElementById('hud-fill').style.transition = `width ${SEQUENCE.length * ITEM_DURATION}ms linear`;
+  setTimeout(() => document.getElementById('hud-fill').style.width = '100%', 100);
+  
+  spawnNextItem();
+}
+
+function spawnNextItem() {
+  if (currentIdx >= SEQUENCE.length) {
+    starSpeed = 0.5;
+    setTimeout(arrivePlanet, 2000);
+    return;
+  }
+
+  const item = SEQUENCE[currentIdx];
+  const stage = document.getElementById('media-stage');
+  
+  const msgIdx = Math.floor((currentIdx / SEQUENCE.length) * HUD_MSGS.length);
+  document.getElementById('hud-status').textContent = HUD_MSGS[msgIdx] || 'Cruising...';
+
+  let el = document.createElement('div');
+  el.className = 'media-item';
+  
+  if (item.type === 'video') {
+    const vid = document.createElement('video');
+    vid.src = item.src; 
+    vid.muted = true; 
+    vid.playsInline = true; 
+    vid.loop = true;
+    vid.autoplay = true;
+    vid.setAttribute('muted', '');
+    vid.setAttribute('playsinline', '');
+    vid.play().catch(e => console.log("Video autoplay blocked:", e));
+    el.appendChild(vid);
+  } else {
+    const img = document.createElement('img');
+    img.src = item.src;
+    el.appendChild(img);
+  }
+
+  const dir = DIRS[currentIdx % 2];
+  el.classList.add(`anim-pass-${dir}`);
+  el.style.animationDuration = `${ITEM_DURATION}ms`; 
+
+  stage.appendChild(el);
+
+  if (item.triggerVoice) {
+    const vVid = document.getElementById('voice-vid');
+    document.getElementById('song').volume = 0.2; 
+    document.getElementById('voice-indicator').classList.add('show');
+    vVid.play().catch(()=>{});
+    
+    vVid.onended = () => {
+      document.getElementById('song').volume = 1.0;
+      document.getElementById('voice-indicator').classList.remove('show');
+    };
+  }
+
+  setTimeout(() => {
+    if(el.parentNode) el.parentNode.removeChild(el);
+  }, ITEM_DURATION + 100);
+
+  currentIdx++;
+  setTimeout(spawnNextItem, ITEM_DURATION - 800); 
+}
+
+/* Audio Controls */
+const songEl = document.getElementById('song');
+let songPlaying = false;
+function playSong(){ songEl.play().then(()=>{ songPlaying=true; document.getElementById('play-btn').textContent='⏸'; }).catch(()=>{}); }
+function togglePlay(){ if(songPlaying){ songEl.pause(); songPlaying=false; document.getElementById('play-btn').textContent='▶'; } else { songEl.play(); songPlaying=true; document.getElementById('play-btn').textContent='⏸'; } }
+songEl.addEventListener('timeupdate',()=>{ if(!songEl.duration) return; const pct=(songEl.currentTime/songEl.duration)*100; document.getElementById('p-bar').style.width=pct+'%'; const fmt=s=>{ const m=Math.floor(s/60),sec=Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; }; document.getElementById('p-time').textContent=fmt(songEl.currentTime)+' / '+fmt(songEl.duration); });
+
+function arrivePlanet(){
+  document.getElementById('voice-vid').pause();
+  showScreen('s-planet');
+}
+
+function openLetter(){
+  showScreen('s-letter');
+  fetch('letter.txt').then(r=>r.text()).then(renderLetter).catch(()=>renderLetter("Dear Isro,\n\n[Your letter text goes here.]\n\nHappy Birthday."));
+}
+
+function renderLetter(text){
+  const container = document.getElementById('letter-text');
+  const lines = text.split('\n');
+  let sigLine = ''; let bodyLines = [...lines];
+  for(let i=lines.length-1;i>=0;i--){ if(lines[i].trim()){ sigLine = lines[i]; bodyLines = lines.slice(0,i); break; } }
+  bodyLines.forEach((line,i)=>{
+    const span = document.createElement('span'); span.className = 'l-line'; span.textContent = line || '\u00A0';
+    container.appendChild(span); setTimeout(()=> span.classList.add('on'), 120 + i*110);
+  });
+  const sign = document.getElementById('letter-sign'); sign.textContent = sigLine;
+  setTimeout(()=> sign.classList.add('on'), 120 + bodyLines.length*110 + 400);
+}
+</script>
+</body>
+</html>
