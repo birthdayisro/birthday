@@ -61,7 +61,7 @@ html, body {
 .screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 1s ease; }
 .screen.active { opacity:1; pointer-events:all; }
 
-/* ══════���═════════════════════════
+/* ════════════════════════════════
    SCREEN 0 — GAME BOY CONSOLE
 ════════════════════════════════ */
 #s-intro { background-color: #05010a; z-index: 50; }
@@ -290,9 +290,9 @@ canvas#gameCanvas { display: block; width: 320px; height: 288px; image-rendering
   box-shadow: 0 0 50px rgba(245, 208, 97, 0.2); border: 1px solid rgba(255,255,255,0.1);
 }
 .btn-close-modal {
-  position: absolute; top: 20px; right: 20px; width: 44px; height: 44px;
+  position: absolute; top: -50px; right: 0px; width: 40px; height: 40px;
   background: rgba(255,112,150,0.15); border: 1px solid var(--blush); color: white;
-  border-radius: 50%; font-family: var(--mono); font-size: 20px; cursor: pointer;
+  border-radius: 50%; font-family: var(--mono); font-size: 18px; cursor: pointer;
   z-index: 100; transition: background 0.2s, transform 0.2s;
   display: flex; align-items: center; justify-content: center;
 }
@@ -334,7 +334,7 @@ canvas#gameCanvas { display: block; width: 320px; height: 288px; image-rendering
 
 <!-- ════════════════════════════════
    SCREEN 0: GAME BOY LOBBY
-════════════════════════════════ -->
+════════════════��═══════════════ -->
 <div id="s-intro" class="screen active">
   <div id="power-on-overlay">
       <div style="font-size:24px;">🎮</div>
@@ -440,12 +440,45 @@ canvas#gameCanvas { display: block; width: 320px; height: 288px; image-rendering
 
 <!-- NEW: FULLSCREEN MEDIA MODAL -->
 <div id="media-modal" onclick="closeMediaModal()">
-  <button class="btn-close-modal" onclick="closeMediaModal()">X</button>
-  <!-- Stop propagation so clicking the actual photo doesn't close it -->
-  <div id="media-modal-content" onclick="event.stopPropagation()"></div>
+  <div id="media-modal-content" onclick="event.stopPropagation()">
+      <button class="btn-close-modal" onclick="closeMediaModal()">X</button>
+      <!-- content injected here via JS -->
+  </div>
 </div>
 
 <script>
+/* ── THE SEQUENCE (ALL IMAGES & VIDEOS) ── */
+const SEQUENCE = [ 
+  { type:'single', src:'first hello.png' }, { type:'single', src:'pic2.png' }, { type:'single', src:'pic3.png' }, { type:'video',  src:'fitcheck1.mp4' }, { type:'single', src:'pic4.png' }, { type:'single', src:'pic5.png' }, { type:'single', src:'pic6.png' }, { type:'single', src:'pic7.png' }, { type:'single', src:'pic8.png' }, { type:'single', src:'pic9.png' }, { type:'video',  src:'fitcheck2.mp4' }, { type:'single', src:'pic10.png' }, { type:'single', src:'pic11.png' }, { type:'single', src:'pic12.png' }, { type:'single', src:'pic13.png' }, { type:'single', src:'pic14.webp' }, { type:'video',  src:'video.mp4' }, { type:'single', src:'pic15.png' }, { type:'single', src:'pic16.png' }, { type:'single', src:'pic17.png' }, { type:'single', src:'pic18.jpg' }, { type:'single', src:'pic19.jpg' }, { type:'single', src:'pic20.jpeg' }, { type:'single', src:'pic21.png' }, { type:'single', src:'pic22.png' } 
+];
+
+const eligibleVoiceIndexes = SEQUENCE.map((item, index) => item.type === 'single' && index > 2 ? index : -1).filter(i => i !== -1);
+const randomVoiceIndex = eligibleVoiceIndexes[Math.floor(Math.random() * eligibleVoiceIndexes.length)] || 6;
+SEQUENCE[randomVoiceIndex].triggerVoice = true;
+
+/* ── MAGIC PRELOADER TO FIX GITHUB PAGES LAG ── */
+function preloadMedia() {
+  const uiImages = ['cursor.png', 'pig.png', 'spaceship.png', 'cry.gif', 'doduo.png', 'shellder.png'];
+  uiImages.forEach(src => { const img = new Image(); img.src = src; });
+
+  SEQUENCE.forEach(item => {
+    if (item.type === 'single') {
+      const img = new Image();
+      img.src = item.src;
+    } else if (item.type === 'video') {
+      // Secretly tells browser to fetch video into cache memory
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'video';
+      link.href = item.src;
+      document.head.appendChild(link);
+    }
+  });
+}
+// Start preloading exactly 1 second after page loads (while she's playing Gameboy!)
+window.addEventListener('load', () => setTimeout(preloadMedia, 1000));
+
+
 /* ── CUSTOM IMAGE CURSOR ── */
 const cur = document.getElementById('cursor');
 let mx = window.innerWidth/2, my = window.innerHeight/2; 
@@ -832,11 +865,6 @@ function startCountdown() {
   }, 1000);
 }
 
-const SEQUENCE = [ { type:'single', src:'first hello.png' }, { type:'single', src:'pic2.png' }, { type:'single', src:'pic3.png' }, { type:'video',  src:'fitcheck1.mp4' }, { type:'single', src:'pic4.png' }, { type:'single', src:'pic5.png' }, { type:'single', src:'pic6.png' }, { type:'single', src:'pic7.png' }, { type:'single', src:'pic8.png' }, { type:'single', src:'pic9.png' }, { type:'video',  src:'fitcheck2.mp4' }, { type:'single', src:'pic10.png' }, { type:'single', src:'pic11.png' }, { type:'single', src:'pic12.png' }, { type:'single', src:'pic13.png' }, { type:'single', src:'pic14.webp' }, { type:'video',  src:'video.mp4' }, { type:'single', src:'pic15.png' }, { type:'single', src:'pic16.png' }, { type:'single', src:'pic17.png' }, { type:'single', src:'pic18.jpg' }, { type:'single', src:'pic19.jpg' }, { type:'single', src:'pic20.jpeg' }, { type:'single', src:'pic21.png' }, { type:'single', src:'pic22.png' } ];
-const eligibleVoiceIndexes = SEQUENCE.map((item, index) => item.type === 'single' && index > 2 ? index : -1).filter(i => i !== -1);
-const randomVoiceIndex = eligibleVoiceIndexes[Math.floor(Math.random() * eligibleVoiceIndexes.length)] || 6;
-SEQUENCE[randomVoiceIndex].triggerVoice = true;
-
 const DIRS = ['left', 'right']; const HUD_MSGS = ['Departing Earth...', 'Passing Memories', 'Cruising through the Void...', 'Destination in sight 💜'];
 let currentIdx = 0; const ITEM_DURATION = 4500; 
 
@@ -1007,7 +1035,7 @@ function setupConstellationDrag() {
   const endDrag = () => { isDown = false; wrap.style.cursor = 'grab'; };
 
   wrap.addEventListener('mousedown', startDrag);
-  window.addEventListener('mousemove', doDrag);
+  window.addEventListener('mousemove', do doDrag);
   window.addEventListener('mouseup', endDrag);
   window.addEventListener('mouseleave', endDrag);
 
@@ -1020,7 +1048,11 @@ function setupConstellationDrag() {
 function openMediaModal(item) {
     const modal = document.getElementById('media-modal');
     const content = document.getElementById('media-modal-content');
-    content.innerHTML = ''; // Clear previous
+    
+    // Remove previous media (keep the close button)
+    Array.from(content.children).forEach(child => {
+        if(!child.classList.contains('btn-close-modal')) child.remove();
+    });
 
     if (item.type === 'video') {
         const vid = document.createElement('video');
@@ -1043,7 +1075,11 @@ function closeMediaModal() {
     modal.classList.remove('show');
     
     // Clear out the HTML to stop videos from playing in the background
-    setTimeout(() => { content.innerHTML = ''; }, 300);
+    setTimeout(() => { 
+      Array.from(content.children).forEach(child => {
+          if(!child.classList.contains('btn-close-modal')) child.remove();
+      });
+    }, 300);
 }
 </script>
 </body>
