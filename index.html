@@ -334,7 +334,7 @@ canvas#gameCanvas { display: block; width: 320px; height: 288px; image-rendering
 
 <!-- ════════════════════════════════
    SCREEN 0: GAME BOY LOBBY
-════════════════��═══════════════ -->
+════════════════════════════════ -->
 <div id="s-intro" class="screen active">
   <div id="power-on-overlay">
       <div style="font-size:24px;">🎮</div>
@@ -466,7 +466,6 @@ function preloadMedia() {
       const img = new Image();
       img.src = item.src;
     } else if (item.type === 'video') {
-      // Secretly tells browser to fetch video into cache memory
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'video';
@@ -475,7 +474,6 @@ function preloadMedia() {
     }
   });
 }
-// Start preloading exactly 1 second after page loads (while she's playing Gameboy!)
 window.addEventListener('load', () => setTimeout(preloadMedia, 1000));
 
 
@@ -1035,7 +1033,7 @@ function setupConstellationDrag() {
   const endDrag = () => { isDown = false; wrap.style.cursor = 'grab'; };
 
   wrap.addEventListener('mousedown', startDrag);
-  window.addEventListener('mousemove', do doDrag);
+  window.addEventListener('mousemove', doDrag);
   window.addEventListener('mouseup', endDrag);
   window.addEventListener('mouseleave', endDrag);
 
