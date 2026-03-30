@@ -457,24 +457,40 @@ const randomVoiceIndex = eligibleVoiceIndexes[Math.floor(Math.random() * eligibl
 SEQUENCE[randomVoiceIndex].triggerVoice = true;
 
 /* ── MAGIC PRELOADER TO FIX GITHUB PAGES LAG ── */
-function preloadMedia() {
+async function preloadMedia() {
+  // 1. Preload UI images the standard way
   const uiImages = ['cursor.png', 'pig.png', 'spaceship.png', 'cry.gif', 'doduo.png', 'shellder.png'];
   uiImages.forEach(src => { const img = new Image(); img.src = src; });
 
-  SEQUENCE.forEach(item => {
-    if (item.type === 'single') {
-      const img = new Image();
-      img.src = item.src;
-    } else if (item.type === 'video') {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'video';
-      link.href = item.src;
-      document.head.appendChild(link);
+  // 2. Fetch all SEQUENCE media into browser memory (Blobs)
+  // We do this in the background while she plays the GameBoy
+  for (let i = 0; i < SEQUENCE.length; i++) {
+    const item = SEQUENCE[i];
+    try {
+      const response = await fetch(item.src);
+      const blob = await response.blob();
+      const localUrl = URL.createObjectURL(blob);
+      
+      // Replace the network URL with our newly downloaded local memory URL
+      item.src = localUrl; 
+    } catch (error) {
+      console.warn(`Could not fetch ${item.src} - it will load normally.`, error);
     }
-  });
+  }
+
+  // 3. Let's also completely preload the secret voice video just in case!
+  try {
+    const voiceVid = document.getElementById('voice-vid');
+    const response = await fetch(voiceVid.getAttribute('src'));
+    const blob = await response.blob();
+    voiceVid.src = URL.createObjectURL(blob);
+    voiceVid.load(); // Prime the audio pipeline
+  } catch (error) {
+    console.warn("Could not fetch voice video.", error);
+  }
 }
-window.addEventListener('load', () => setTimeout(preloadMedia, 1000));
+
+window.addEventListener('load', () => setTimeout(preloadMedia, 500));
 
 
 /* ── CUSTOM IMAGE CURSOR ── */
